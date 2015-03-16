@@ -1,4 +1,4 @@
-unsigned long startMicros;
+unsigned long startMillis;
 int currentState, lastState = HIGH;
 
 void setup() {
@@ -10,14 +10,13 @@ void setup() {
 void loop() {
   currentState = digitalRead(2);
   if(currentState == LOW && lastState == HIGH) {
-    startMicros = micros();
-    Mouse.click();
-    while(!(Serial.available() > 0) ) {
-      if(micros() - startMicros > 1000000)
-        break;
-    }
-    Serial.println(micros() - startMicros);
-    delay(10);
+    startMillis = millis();
+    Mouse.press();
+    while(!(Serial.available() > 0) );
+    while(Serial.available() > 0)
+      Serial.read();
+    Mouse.release();
+    Serial.println(millis() - startMillis);
   }
   lastState = currentState;
 }

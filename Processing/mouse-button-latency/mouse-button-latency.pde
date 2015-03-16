@@ -1,6 +1,7 @@
 import processing.serial.*;
 
 Serial myPort;
+boolean receiving = false;
 
 void setup() {
   size(480, 120);
@@ -8,10 +9,16 @@ void setup() {
 }
 
 void draw() {
-  if(mousePressed) {
+  if(mousePressed && receiving == false) {
     myPort.write(65);
+    receiving = true;
   }
-  while(myPort.available() > 0)
-    print(char(myPort.read()));
+  if(receiving == true) {
+    if(myPort.available() > 0) {
+      while(myPort.available() > 0)
+        print(char(myPort.read()));
+      receiving = false;
+    }
+  }
 }
 
